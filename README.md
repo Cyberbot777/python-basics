@@ -9,5 +9,4 @@ This repository tracks my journey to becoming a junior Python AI/ML developer.
 - **Skills:** Python, Data Structures (Lists, Dictionaries), Functions, Error Handling, File I/O
 - **Goals:** Land an entry-level Python AI/ML developer role by December 2025.
 - **Author:** Richard
-- **Date:** March 17, 2025 (Updated March 20, 2025)
-- **License:** This project is licensed under the MIT License—see the [LICENSE](LICENSE) file for details.
+- **Date:** March 17, 2025 (Updated March 20, 2025
