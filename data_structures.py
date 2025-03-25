@@ -55,3 +55,4 @@ for student in students:
     avg = calculate_average(student["grades"])
     student["passed"] = avg >= 90
     print(f"{student['name']} {'Passed' if student['passed'] else 'Failed'} with average {avg:.2f}")
+
