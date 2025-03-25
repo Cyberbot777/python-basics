@@ -19,6 +19,20 @@ def search_student(students, name):
             return student
     return None
 
+# Function to remove a student by name
+def remove_student(students, name):
+    student = search_student(students, name)
+    if student:
+        # Confirm removal with the user
+        confirm = input(f"Are you sure you want to remove {name}? (yes/no): ").lower()
+        if confirm in ['yes', 'y']:
+            students.remove(student)
+            print(f"Removed {name} successfully!")
+        else:
+            print(f"Removal of {name} canceled.")
+    else:
+        print(f"Student '{name}' not found.")
+
 # Function to save students to a file
 def save_students(students, filename="students.txt"):
     try:
@@ -57,7 +71,7 @@ def load_students(filename="students.txt"):
         print("Error: Could not read from file.")
     return students  # Moved return outside the try block
 
-# Main program
+# Main program with menu
 def main():
     # Load existing students
     students = load_students()
@@ -68,23 +82,57 @@ def main():
         add_student(students, "Alice", [90, 85, 92, 84])
         add_student(students, "Mike", [99, 86, 90])
 
-    # Search for a student
-    name = input("Enter student name to search: ")
-    student = search_student(students, name)
-    if student:
-        avg = calculate_average(student["grades"])
-        print(f"Found {student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
-    else:
-        print(f"Student {name} not found.")
+    while True:
+        print("\nStudent Searcher Menu:")
+        print("1. Add a student")
+        print("2. Search for a student")
+        print("3. View all students")
+        print("4. Remove a student")
+        print("5. Save and exit")
+        choice = input("Enter your choice (1-5): ")
 
-    # Print all students
-    print("\nAll students:")
-    for student in students:
-        avg = calculate_average(student["grades"])
-        print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+        if choice == "1":
+            name = input("Enter student name: ")
+            grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
+            try:
+                grades = [int(g) for g in grades_input.split(",")]
+                add_student(students, name, grades)
+                print(f"Added {name} successfully!")
+            except ValueError:
+                print("Error: Grades must be numbers.")
 
-    # Save students before exiting
-    save_students(students)
+        elif choice == "2":
+            name = input("Enter student name to search: ")
+            student = search_student(students, name)
+            if student:
+                avg = calculate_average(student["grades"])
+                print(f"Found {student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+            else:
+                print(f"Student '{name}' not found.")
+
+        elif choice == "3":
+            print("\nAll students:")
+            for student in students:
+                avg = calculate_average(student["grades"])
+                print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+
+        elif choice == "4":
+            name = input("Enter student name to remove: ")
+            remove_student(students, name)
+
+        elif choice == "5":
+            confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
+            if confirm in ['yes', 'y']:
+                save_students(students)
+                print("Saved and exiting.")
+                break
+            elif confirm in ['no', 'n']:
+                print("Exit canceled.")
+            else:
+                print("Invalid input. Exit canceled.")
+
+        else:
+            print("Invalid choice. Please try again.")
 
 # Run the program
 if __name__ == "__main__":
