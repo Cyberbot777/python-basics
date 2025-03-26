@@ -7,8 +7,17 @@ def calculate_average(grades):
         return 0
     return sum(grades) / len(grades)
 
-# Function to add a student
+# Function to validate grades
+def validate_grades(grades):
+    for grade in grades:
+        if not (0 <= grade <= 100):
+            return False
+    return True
+
+# Function to add a student with validation
 def add_student(students, name, grades):
+    if not validate_grades(grades):
+        raise ValueError("Grades must be between 0 and 100")
     student = {"name": name, "grades": grades}
     students.append(student)
 
@@ -32,6 +41,15 @@ def remove_student(students, name):
             print(f"Removal of {name} canceled.")
     else:
         print(f"Student '{name}' not found.")
+
+# Function to search for student by average grade range
+def search_students_by_average(students, min_avg, max_avg):
+    result = []
+    for student in students:
+        avg = calculate_average(student["grades"])
+        if min_avg <= avg <= max_avg:
+            result.append(student)
+    return result
 
 # Function to save students to a file
 def save_students(students, filename="students.txt"):
@@ -71,7 +89,7 @@ def load_students(filename="students.txt"):
         print("Error: Could not read from file.")
     return students  # Moved return outside the try block
 
-# Main program with menu
+# Main program with a menu
 def main():
     # Load existing students
     students = load_students()
@@ -85,11 +103,12 @@ def main():
     while True:
         print("\nStudent Searcher Menu:")
         print("1. View all students")
-        print("2. Search for a student")
-        print("3. Add a student")
-        print("4. Remove a student")
-        print("5. Save and exit")
-        choice = input("Enter your choice (1-5): ")
+        print("2. Search for a student by name")
+        print("3. Search for a student by average grade range")
+        print("4. Add a student")
+        print("5. Remove a student")
+        print("6. Save and exit")
+        choice = input("Enter your choice (1-6): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -107,20 +126,38 @@ def main():
                 print(f"Student {name} not found.")
 
         elif choice == "3":
+            try:
+                min_avg = float(input("Enter minimum average: "))
+                max_avg = float(input("Enter maximum average: "))
+                if min_avg > max_avg:
+                    print("Minimum average cannot be greater than maximum average.")
+                    continue
+                results = search_students_by_average(students, min_avg, max_avg)
+                if results:
+                    print("\nStudents within average range:")
+                    for student in results:
+                        avg = calculate_average(student["grades"])
+                        print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+                else:
+                    print("No students found in that average range.")
+            except ValueError:
+                print("Error: Averages must be numbers")
+
+        elif choice == "4":
             name = input("Enter student name: ")
             grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
             try:
                 grades = [int(g) for g in grades_input.split(",")]
                 add_student(students, name, grades)
                 print(f"Added {name} successfully!")
-            except ValueError:
-                print("Error: Grades must be numbers.")
+            except ValueError as e:
+                print(f"Error: {e}")
 
-        elif choice == "4":
+        elif choice == "5":
             name = input("Enter student name to remove: ")
             remove_student(students, name)
 
-        elif choice == "5":
+        elif choice == "6":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
