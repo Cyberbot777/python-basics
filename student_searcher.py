@@ -84,22 +84,18 @@ def main():
 
     while True:
         print("\nStudent Searcher Menu:")
-        print("1. Add a student")
+        print("1. View all students")
         print("2. Search for a student")
-        print("3. View all students")
+        print("3. Add a student")
         print("4. Remove a student")
         print("5. Save and exit")
         choice = input("Enter your choice (1-5): ")
 
         if choice == "1":
-            name = input("Enter student name: ")
-            grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
-            try:
-                grades = [int(g) for g in grades_input.split(",")]
-                add_student(students, name, grades)
-                print(f"Added {name} successfully!")
-            except ValueError:
-                print("Error: Grades must be numbers.")
+            print("\nAll students:")
+            for student in students:
+                avg = calculate_average(student["grades"])
+                print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
 
         elif choice == "2":
             name = input("Enter student name to search: ")
@@ -108,13 +104,17 @@ def main():
                 avg = calculate_average(student["grades"])
                 print(f"Found {student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
             else:
-                print(f"Student '{name}' not found.")
+                print(f"Student {name} not found.")
 
         elif choice == "3":
-            print("\nAll students:")
-            for student in students:
-                avg = calculate_average(student["grades"])
-                print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+            name = input("Enter student name: ")
+            grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
+            try:
+                grades = [int(g) for g in grades_input.split(",")]
+                add_student(students, name, grades)
+                print(f"Added {name} successfully!")
+            except ValueError:
+                print("Error: Grades must be numbers.")
 
         elif choice == "4":
             name = input("Enter student name to remove: ")
