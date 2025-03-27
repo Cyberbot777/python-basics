@@ -1,5 +1,5 @@
 # Student Searcher Program
-# This script manages a list of students, allows searching by name, and saves data to a file.
+# This script manages a list of students, allows searching by name or average, and saves data to a file.
 
 # Function to calculate average grade
 def calculate_average(grades):
@@ -21,12 +21,20 @@ def add_student(students, name, grades):
     student = {"name": name, "grades": grades}
     students.append(student)
 
-# Function to search for a student by name
+# Function to search for a student by name (exact match)
 def search_student(students, name):
     for student in students:
         if student["name"].lower() == name.lower():
             return student
     return None
+
+# Function to search for students by partial name
+def search_students_by_partial_name(students, partial_name):
+    results = []
+    for student in students:
+        if partial_name.lower() in student["name"].lower():
+            results.append(student)
+    return results
 
 # Function to remove a student by name
 def remove_student(students, name):
@@ -40,7 +48,7 @@ def remove_student(students, name):
         else:
             print(f"Removal of {name} canceled.")
     else:
-        print(f"Student '{name}' not found.")
+        print(f"Student {name} not found.")
 
 # Function to search for student by average grade range
 def search_students_by_average(students, min_avg, max_avg):
@@ -87,7 +95,7 @@ def load_students(filename="students.txt"):
         print("File not found. Starting with an empty student list.")
     except IOError:
         print("Error: Could not read from file.")
-    return students  # Moved return outside the try block
+    return students
 
 # Main program with a menu
 def main():
@@ -96,19 +104,20 @@ def main():
 
     # Add some initial students if the list is empty
     if not students:
-        add_student(students, "Richard", [85, 90, 95, 88])
+        add_student(students, "Richard", [85,90,95,88])
         add_student(students, "Alice", [90, 85, 92, 84])
         add_student(students, "Mike", [99, 86, 90])
 
     while True:
         print("\nStudent Searcher Menu:")
         print("1. View all students")
-        print("2. Search for a student by name")
-        print("3. Search for a student by average grade range")
-        print("4. Add a student")
-        print("5. Remove a student")
-        print("6. Save and exit")
-        choice = input("Enter your choice (1-6): ")
+        print("2. Search for a student by name (exact match)")
+        print("3. Search for students by partial name")
+        print("4. Search for a student by average grade range")
+        print("5. Add a student")
+        print("6. Remove a student")
+        print("7. Save and exit")
+        choice = input("Enter your choice (1-7): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -126,6 +135,17 @@ def main():
                 print(f"Student {name} not found.")
 
         elif choice == "3":
+            partial_name = input("Enter partial name to search: ")
+            results = search_students_by_partial_name(students, partial_name)
+            if results:
+                print("\nStudents matching partial name:")
+                for student in results:
+                    avg = calculate_average(student["grades"])
+                    print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+            else:
+                print(f"No students found matching {partial_name}.")
+
+        elif choice == "4":
             try:
                 min_avg = float(input("Enter minimum average: "))
                 max_avg = float(input("Enter maximum average: "))
@@ -143,7 +163,7 @@ def main():
             except ValueError:
                 print("Error: Averages must be numbers")
 
-        elif choice == "4":
+        elif choice == "5":
             name = input("Enter student name: ")
             grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
             try:
@@ -153,11 +173,11 @@ def main():
             except ValueError as e:
                 print(f"Error: {e}")
 
-        elif choice == "5":
+        elif choice == "6":
             name = input("Enter student name to remove: ")
             remove_student(students, name)
 
-        elif choice == "6":
+        elif choice == "7":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
@@ -174,3 +194,5 @@ def main():
 # Run the program
 if __name__ == "__main__":
     main()
+
+
