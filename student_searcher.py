@@ -36,6 +36,10 @@ def search_students_by_partial_name(students, partial_name):
             results.append(student)
     return results
 
+# Function to sort students by average grade
+def sort_students_by_average(students, ascending=True):
+    return sorted(students, key=lambda s: calculate_average(s["grades"]), reverse=not ascending)
+
 # Function to remove a student by name
 def remove_student(students, name):
     student = search_student(students, name)
@@ -114,10 +118,11 @@ def main():
         print("2. Search for a student by name (exact match)")
         print("3. Search for students by partial name")
         print("4. Search for a student by average grade range")
-        print("5. Add a student")
-        print("6. Remove a student")
-        print("7. Save and exit")
-        choice = input("Enter your choice (1-7): ")
+        print("5. Sort students by average grade")
+        print("6. Add a student")
+        print("7. Remove a student")
+        print("8. Save and exit")
+        choice = input("Enter your choice (1-8): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -164,6 +169,18 @@ def main():
                 print("Error: Averages must be numbers")
 
         elif choice == "5":
+            direction = input("Sort by average grade (ascending/descending): ").lower()
+            if direction not in ['ascending', 'descending']:
+                print("Invalid direction. Please choose 'ascending' or 'descending'.")
+                continue
+            ascending = (direction == 'ascending')
+            sorted_students = sort_students_by_average(students, ascending)
+            print(f"\nStudents sorted by average grade ({direction}):")
+            for student in sorted_students:
+                avg = calculate_average(student["grades"])
+                print(f"{student['name']}: Grades {student['grades']}, Average Grade: {avg:.2f}")
+
+        elif choice == "6":
             name = input("Enter student name: ")
             grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
             try:
@@ -173,11 +190,11 @@ def main():
             except ValueError as e:
                 print(f"Error: {e}")
 
-        elif choice == "6":
+        elif choice == "7":
             name = input("Enter student name to remove: ")
             remove_student(students, name)
 
-        elif choice == "7":
+        elif choice == "8":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
