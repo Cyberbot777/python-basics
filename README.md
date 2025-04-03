@@ -14,6 +14,7 @@ This repository tracks my journey to becoming a junior Python AI/ML developer.
   - March 27, 2025: Enhanced `student_searcher.py` with search by partial name, and created `python-calcs` branch with `better_calc.py` to practice basic calculator functionality.
   - March 28-April 1, 2025: Completed the "Learn Python - Full Course for Beginners" by freeCodeCamp.org to reinforce Python fundamentals (variables, data types, lists, dictionaries, functions, loops, file I/O, error handling, classes, inheritance, modules).
   - April 2, 2025: Enhanced `student_searcher.py` with sort by average grade (ascending/descending).
+  - April 3, 2025: Enhanced `student_searcher.py` with a feature to edit student grades and reorganized menu to place add/remove student options together.
 - **Skills:** Python, Data Structures (Lists, Dictionaries), Functions, File I/O, Error Handling, Sorting, Searching
 - **Author:** Richard
-- **Date:** March 17, 2025 (Updated April 2, 2025)
+- **Date:** March 17, 2025 (Updated April 3, 2025)
