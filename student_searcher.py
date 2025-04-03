@@ -1,26 +1,20 @@
 # Student Searcher Program
 # This script manages a list of students, allows searching by name or average, and saves data to a file.
 
-# Function to calculate average grade
+# Function to calculate average grade (used by multiple functions)
 def calculate_average(grades):
     if not grades:
         return 0
     return sum(grades) / len(grades)
 
-# Function to validate grades
+# Function to validate grades (used by add_student and edit_student_grades)
 def validate_grades(grades):
     for grade in grades:
         if not (0 <= grade <= 100):
             return False
     return True
 
-# Function to add a student with validation
-def add_student(students, name, grades):
-    if not validate_grades(grades):
-        raise ValueError("Grades must be between 0 and 100")
-    student = {"name": name, "grades": grades}
-    students.append(student)
-
+# --- Search-related functions (menu options 2, 3, 4) ---
 # Function to search for a student by name (exact match)
 def search_student(students, name):
     for student in students:
@@ -28,7 +22,7 @@ def search_student(students, name):
             return student
     return None
 
-# Function to search for students by partial name
+# Function to search for students by partial name (menu option 3)
 def search_students_by_partial_name(students, partial_name):
     results = []
     for student in students:
@@ -36,25 +30,7 @@ def search_students_by_partial_name(students, partial_name):
             results.append(student)
     return results
 
-# Function to sort students by average grade
-def sort_students_by_average(students, ascending=True):
-    return sorted(students, key=lambda s: calculate_average(s["grades"]), reverse=not ascending)
-
-# Function to remove a student by name
-def remove_student(students, name):
-    student = search_student(students, name)
-    if student:
-        # Confirm removal with the user
-        confirm = input(f"Are you sure you want to remove {name}? (yes/no): ").lower()
-        if confirm in ['yes', 'y']:
-            students.remove(student)
-            print(f"Removed {name} successfully!")
-        else:
-            print(f"Removal of {name} canceled.")
-    else:
-        print(f"Student {name} not found.")
-
-# Function to search for student by average grade range
+# Function to search for students by average grade range (menu option 4)
 def search_students_by_average(students, min_avg, max_avg):
     result = []
     for student in students:
@@ -63,6 +39,60 @@ def search_students_by_average(students, min_avg, max_avg):
             result.append(student)
     return result
 
+# --- Sort-related function (menu option 5) ---
+# Function to sort students by average grade
+def sort_students_by_average(students, ascending=True):
+    return sorted(students, key=lambda s: calculate_average(s["grades"]), reverse=not ascending)
+
+# --- Student modification functions (menu options 6, 7, 8) ---
+# Function to add a student with validation (menu option 6)
+def add_student(students, name, grades):
+    if not validate_grades(grades):
+        raise ValueError("Grades must be between 0 and 100")
+    student = {"name": name, "grades": grades}
+    students.append(student)
+
+# Function to remove a student by name (menu option 7)
+def remove_student(students, name):
+    student = search_student(students, name)
+    if student:
+        # Confirm removal with the user
+        confirm = input(f"Are you sure you want to remove {name}? (yes/y or no/n): ").lower()
+        if confirm in ['yes', 'y']:
+            students.remove(student)
+            print(f"Removed {name} successfully!")
+        elif confirm in ['no', 'n']:
+            print(f"Removal of {name} canceled.")
+        else:
+            print("Invalid input. Removal canceled.")
+    else:
+        print(f"Student {name} not found.")
+
+# Function to edit a student's grades (menu option 8)
+def edit_student_grades(students, name):
+    student = search_student(students, name)
+    if student:
+        print(f"Current grades for {name}: {student['grades']}")
+        confirm = input(f"Are you sure you want to edit grades for {name}? (yes/y or no/n): ").lower()
+        if confirm in ['yes', 'y']:
+            grades_input = input("Enter new grades (comma-separated, e.g., 86,90,95): ")
+            try:
+                new_grades = [int(g) for g in grades_input.split(",")]
+                if not validate_grades(new_grades):
+                    print("Error: Grades must be between 0 and 100.")
+                    return
+                student['grades'] = new_grades
+                print(f"Updated grades for {name} successfully!")
+            except ValueError as e:
+                print(f"Error: {e}")
+        elif confirm in ['no', 'n']:
+            print(f"Editing grades for {name} canceled.")
+        else:
+            print("Invalid input. Please enter 'yes/y' or 'no/n'. Editing canceled.")
+    else:
+        print(f"Student {name} not found.")
+
+# --- File I/O functions (menu option 9) ---
 # Function to save students to a file
 def save_students(students, filename="students.txt"):
     try:
@@ -108,7 +138,7 @@ def main():
 
     # Add some initial students if the list is empty
     if not students:
-        add_student(students, "Richard", [85,90,95,88])
+        add_student(students, "Richard", [85, 90, 95, 88])
         add_student(students, "Alice", [90, 85, 92, 84])
         add_student(students, "Mike", [99, 86, 90])
 
@@ -117,12 +147,13 @@ def main():
         print("1. View all students")
         print("2. Search for a student by name (exact match)")
         print("3. Search for students by partial name")
-        print("4. Search for a student by average grade range")
+        print("4. Search for students by average grade range")
         print("5. Sort students by average grade")
         print("6. Add a student")
         print("7. Remove a student")
-        print("8. Save and exit")
-        choice = input("Enter your choice (1-8): ")
+        print("8. Edit a student's grades")
+        print("9. Save and exit")
+        choice = input("Enter your choice (1-9): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -166,7 +197,7 @@ def main():
                 else:
                     print("No students found in that average range.")
             except ValueError:
-                print("Error: Averages must be numbers")
+                print("Error: Averages must be numbers.")
 
         elif choice == "5":
             direction = input("Sort by average grade (ascending/descending): ").lower()
@@ -182,7 +213,7 @@ def main():
 
         elif choice == "6":
             name = input("Enter student name: ")
-            grades_input = input("Enter grades (comma-separated, e.g., 86,90,95):")
+            grades_input = input("Enter grades (comma-separated, e.g., 86,90,95): ")
             try:
                 grades = [int(g) for g in grades_input.split(",")]
                 add_student(students, name, grades)
@@ -195,6 +226,10 @@ def main():
             remove_student(students, name)
 
         elif choice == "8":
+            name = input("Enter student name to edit grades: ")
+            edit_student_grades(students, name)
+
+        elif choice == "9":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
@@ -208,8 +243,9 @@ def main():
         else:
             print("Invalid choice. Please try again.")
 
+# Future improvement: Add a feature to export student data to CSV
+
 # Run the program
 if __name__ == "__main__":
     main()
-
 
