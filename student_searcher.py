@@ -1,6 +1,8 @@
 # Student Searcher Program
 # This script manages a list of students, allows searching by name or average, and saves data to a file.
 
+import csv # Import the csv module for exporting to CSV
+
 # Function to calculate average grade (used by multiple functions)
 def calculate_average(grades):
     if not grades:
@@ -92,8 +94,23 @@ def edit_student_grades(students, name):
     else:
         print(f"Student {name} not found.")
 
-# --- File I/O functions (menu option 9) ---
-# Function to save students to a file
+# --- File I/O functions (menu option 9, 10) ---
+# Function to export students to a CSV file (menu option 9)
+def export_students_to_csv(students, filename="students_export.csv"):
+    try:
+        with open(filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            # Write the header
+            writer.writerow(["Name", "Grades", "Average Grade"])
+            # Write each student's data
+            for student in students:
+                avg = calculate_average(student["grades"])
+                writer.writerow([student["name"], student["grades"], f"{avg:.2f}"])
+        print(f"Successfully exported student data to {filename}!")
+    except IOError:
+        print("Error: Could not export to CSV file.")
+
+# Function to save students to a file (menu option 10)
 def save_students(students, filename="students.txt"):
     try:
         with open(filename, 'w') as file:
@@ -152,8 +169,9 @@ def main():
         print("6. Add a student")
         print("7. Remove a student")
         print("8. Edit a student's grades")
-        print("9. Save and exit")
-        choice = input("Enter your choice (1-9): ")
+        print("9. Export student data to CSV")
+        print("10. Save and exit")
+        choice = input("Enter your choice (1-10): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -230,6 +248,9 @@ def main():
             edit_student_grades(students, name)
 
         elif choice == "9":
+            export_students_to_csv(students)
+
+        elif choice == "10":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
