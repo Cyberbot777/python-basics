@@ -1,7 +1,7 @@
 # Student Searcher Program
 # This script manages a list of students, allows searching by name or average, and saves data to a file.
 
-import csv # Import the csv module for exporting to CSV
+import csv # Import the csv module for exporting and importing to CSV
 
 # Function to calculate average grade (used by multiple functions)
 def calculate_average(grades):
@@ -94,7 +94,7 @@ def edit_student_grades(students, name):
     else:
         print(f"Student {name} not found.")
 
-# --- File I/O functions (menu option 9, 10) ---
+# --- File I/O functions (menu option 9, 10, 11) ---
 # Function to export students to a CSV file (menu option 9)
 def export_students_to_csv(students, filename="students_export.csv"):
     try:
@@ -110,7 +110,37 @@ def export_students_to_csv(students, filename="students_export.csv"):
     except IOError:
         print("Error: Could not export to CSV file.")
 
-# Function to save students to a file (menu option 10)
+# Function to import students from a CSV file (menu option 10)
+def import_students_from_csv(students, filename="students_export.csv"):
+    try:
+        with open(filename, 'r', newline='') as file:
+            reader = csv.reader(file)
+            # Skip the header row
+            header = next(reader)
+            if header != ["Name", "Grades", "Average Grade"]:
+                print("Error: Invalid CSV format. Expected columns: Name, Grades, Average Grade.")
+                return
+            # Clear existing students to avoid duplicates
+            students.clear()
+            # Read each row and add the student
+            for row in reader:
+                name = row[0]
+                # Parse the grades from string representation (e.g., "[85, 90, 95, 88]")
+                grades_str = row[1].strip("[]")
+                grades = [int(g) for g in grades_str.split(", ") if g]
+                if not validate_grades(grades):
+                    print(f"Error: Invalid grades for {name}. Grades must be between 0 and 100. Skipping.")
+                    continue
+                add_student(students, name, grades)
+        print(f"Successfully imported student data from {filename}!")
+    except FileNotFoundError:
+        print(f"Error: File {filename} not found.")
+    except IOError:
+        print("Error: Could not read from CSV file.")
+    except ValueError as e:
+        print(f"Error parsing CSV data: {e}")
+
+# Function to save students to a file (menu option 11)
 def save_students(students, filename="students.txt"):
     try:
         with open(filename, 'w') as file:
@@ -170,8 +200,9 @@ def main():
         print("7. Remove a student")
         print("8. Edit a student's grades")
         print("9. Export student data to CSV")
-        print("10. Save and exit")
-        choice = input("Enter your choice (1-10): ")
+        print("10. Import student data from CSV")
+        print("11. Save and exit")
+        choice = input("Enter your choice (1-11): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -251,6 +282,9 @@ def main():
             export_students_to_csv(students)
 
         elif choice == "10":
+            import_students_from_csv(students)
+
+        elif choice == "11":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
@@ -263,8 +297,6 @@ def main():
 
         else:
             print("Invalid choice. Please try again.")
-
-# Future improvement: Add a feature to export student data to CSV
 
 # Run the program
 if __name__ == "__main__":
