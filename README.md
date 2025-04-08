@@ -16,6 +16,7 @@ This repository tracks my journey to becoming a junior Python AI/ML developer.
   - April 2, 2025: Enhanced `student_searcher.py` with sort by average grade (ascending/descending).
   - April 3, 2025: Enhanced `student_searcher.py` with a feature to edit student grades and reorganized menu to place add/remove student options together.
   - April 8, 2025: Enhanced `student_searcher.py` with a feature to export student data to CSV.
+  - April 9, 2025: Enhanced `student_searcher.py` with a feature to import student data from CSV.
 - **Skills:** Python, Data Structures (Lists, Dictionaries), Functions, File I/O, Error Handling, Sorting, Searching
 - **Author:** Richard
-- **Date:** March 17, 2025 (Updated April 8, 2025)
+- **Date:** March 17, 2025 (Updated April 9, 2025)
