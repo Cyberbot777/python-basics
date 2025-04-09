@@ -15,7 +15,8 @@ This repository tracks my journey to becoming a junior Python AI/ML developer.
   - March 28-April 1, 2025: Completed the "Learn Python - Full Course for Beginners" by freeCodeCamp.org to reinforce Python fundamentals (variables, data types, lists, dictionaries, functions, loops, file I/O, error handling, classes, inheritance, modules).
   - April 2, 2025: Enhanced `student_searcher.py` with sort by average grade (ascending/descending).
   - April 3, 2025: Enhanced `student_searcher.py` with a feature to edit student grades and reorganized menu to place add/remove student options together.
-  - April 8, 2025: Enhanced `student_searcher.py` with a feature to export and import student data to CSV.
+  - April 8, 2025: Enhanced `student_searcher.py` with features to export student data to CSV and import student data from CSV.
+  - April 9, 2025: Enhanced `student_searcher.py` with a feature to display basic statistics (class average, highest/lowest average).
 - **Skills:** Python, Data Structures (Lists, Dictionaries), Functions, File I/O, Error Handling, Sorting, Searching
 - **Author:** Richard
-- **Date:** March 17, 2025 (Updated April 8, 2025)
+- **Date:** March 17, 2025 (Updated April 9, 2025)
