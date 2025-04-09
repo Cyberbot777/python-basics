@@ -94,7 +94,7 @@ def edit_student_grades(students, name):
     else:
         print(f"Student {name} not found.")
 
-# --- File I/O functions (menu option 9, 10, 11) ---
+# --- File I/O functions (menu option 9, 10, 11, 12) ---
 # Function to export students to a CSV file (menu option 9)
 def export_students_to_csv(students, filename="students_export.csv"):
     try:
@@ -140,7 +140,27 @@ def import_students_from_csv(students, filename="students_export.csv"):
     except ValueError as e:
         print(f"Error parsing CSV data: {e}")
 
-# Function to save students to a file (menu option 11)
+# Added new function to display basic statistics (menu option 11)
+def display_statistics(students):
+    if not students:
+        print("No students available to calculate statistics.")
+        return
+    # Calculate the class average (average of all students' average grades)
+    averages = [calculate_average(student["grades"]) for student in students]
+    class_average = sum(averages) / len(averages)
+    # Find the highest and lowest average grades
+    highest_avg = max(averages)
+    lowest_avg = min(averages)
+    # Find the students with the highest and lowest averages
+    highest_student = next(student["name"] for student in students if calculate_average(student["grades"]) == highest_avg)
+    lowest_student = next(student["name"] for student in students if calculate_average(student["grades"]) == lowest_avg)
+    # Display the statistics
+    print("\nClass Statistics:")
+    print(f"Class Average: {class_average:.2f}")
+    print(f"Highest Average: {highest_avg:.2f} (Student: {highest_student})")
+    print(f"Lowest Average: {lowest_avg:.2f} (Student: {lowest_student})")
+
+# Function to save students to a file (menu option 12)
 def save_students(students, filename="students.txt"):
     try:
         with open(filename, 'w') as file:
@@ -201,8 +221,9 @@ def main():
         print("8. Edit a student's grades")
         print("9. Export student data to CSV")
         print("10. Import student data from CSV")
-        print("11. Save and exit")
-        choice = input("Enter your choice (1-11): ")
+        print("11. Display class statistics")
+        print("12. Save and exit")
+        choice = input("Enter your choice (1-12): ")
 
         if choice == "1":
             print("\nAll students:")
@@ -285,6 +306,9 @@ def main():
             import_students_from_csv(students)
 
         elif choice == "11":
+            display_statistics(students)
+
+        elif choice == "12":
             confirm = input("Are you sure you want to save and exit? (yes/y or no/n): ").lower()
             if confirm in ['yes', 'y']:
                 save_students(students)
