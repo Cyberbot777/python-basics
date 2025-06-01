@@ -1,5 +1,5 @@
 # Python Learning
-This repository tracks my journey to becoming a junior Python AI/ML developer.
+The basics
 - **File:** `data_structures.py` - Practice with dictionaries and lists to calculate student grade averages.
 - **File:** `student_sorter.py` - Program to manage student data with file I/O and sorting by average grade.
 - **File:** `student_searcher.py` - Program to manage student data with file I/O, search by name, and a menu interface.
